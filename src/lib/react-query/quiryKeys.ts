@@ -3,4 +3,5 @@ export enum QUERY_KEYS {
   Login_USER_ACCOUNT = "loginUserAccount",
   GET_CURRENT_USER = "getCurrentUser",
   GET_DOCTOR_PATIENTS = "getDoctorPatients",
+  GET_All_PATIENTS="getAllPatients"
 }

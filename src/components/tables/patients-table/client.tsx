@@ -8,7 +8,7 @@ import { Separator } from "../../ui/separator";
 import { columns } from "./columns";
 
 interface ProductsClientProps {
-  data: User[];
+  data: any[];
 }
 
 export const UserClient: React.FC<ProductsClientProps> = ({ data }) => {
@@ -16,7 +16,7 @@ export const UserClient: React.FC<ProductsClientProps> = ({ data }) => {
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`Patients (${data.length})`}
+          title={`Patients (${data ? data.length : 0})`}
           description="All Patients in the system"
         />
         <Button className="text-xs md:text-sm" onClick={() => {}}>

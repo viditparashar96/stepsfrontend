@@ -9,7 +9,7 @@ import {
   loginDoctor,
   registerDoctor,
 } from "../actions/doctor.actions";
-import { getPatientsByDoctorId } from "../actions/patients.action";
+import { getAllPatients, getPatientsByDoctorId } from "../actions/patients.action";
 import { QUERY_KEYS } from "./quiryKeys";
 
 export const useCurrentDoctor = () => {
@@ -26,6 +26,13 @@ export const useDoctorPatients = (doctorId: string) => {
     queryFn: () => getPatientsByDoctorId(doctorId),
   });
 };
+
+export const useGetAllPatients=()=>{
+  return useQuery({
+    queryKey:[QUERY_KEYS.GET_All_PATIENTS],
+    queryFn:()=>getAllPatients()
+  })
+}
 
 // ============================================================
 // POST QUERIES

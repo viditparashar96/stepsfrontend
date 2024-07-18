@@ -9,3 +9,13 @@ export const getPatientsByDoctorId = async (doctorId: string) => {
     console.log(error);
   }
 };
+
+export const getAllPatients=async()=>{
+  try {
+    const response=await axios_instance.get("/doctor/get-all-patients")
+    return response
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
