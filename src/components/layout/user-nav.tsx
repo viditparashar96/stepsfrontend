@@ -22,7 +22,9 @@ export function UserNav() {
       console.log(response);
       if (response.data) {
         dispatch(logout());
-        window.location.href = "/login";
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 1000);
       }
     } catch (error: any) {
       console.log(error);
