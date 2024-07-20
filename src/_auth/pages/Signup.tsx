@@ -1,23 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { useCreateDoctorAccount } from "../../lib/react-query/quries-mutations";
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     specialty: "",
   });
-  const {
-    mutateAsync: createDoctorAccount,
-    isPending: isLoading,
-    isError,
-    error,
-  } = useCreateDoctorAccount();
+  const { mutateAsync: createDoctorAccount, isPending: isLoading } =
+    useCreateDoctorAccount();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -30,16 +28,27 @@ export default function Signup() {
     try {
       const response = await createDoctorAccount(formData);
       console.log(response);
-    } catch (error) {
+      toast.success("Account created successfully");
+      navigate("/login");
+    } catch (error: any) {
       console.log(error);
+      if (error.response.data.errors) {
+        error.response.data.errors.forEach((err: any) => {
+          toast.error(err.message);
+        });
+      } else {
+        toast.error(error.response.data.message);
+      }
     }
   };
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {JSON.stringify(error)}</div>;
 
   return (
     <div className="w-full lg:grid  lg:grid-cols-2 min-h-screen">
-      <div className="flex items-center justify-center py-12">
+      <h1 className="text-sm  text-center py-4 opacity-55 absolute left-4">
+        The backend of this application is deployed on render for free so it
+        will take initially 60sec to start
+      </h1>
+      <div className="flex items-center justify-center py-20">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Register</h1>
@@ -85,15 +94,6 @@ export default function Signup() {
               />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  to="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
               <Input
                 id="password"
                 type="password"
@@ -104,11 +104,11 @@ export default function Signup() {
               />
             </div>
             <Button onClick={handleClick} className="w-full">
-              Register
+              {isLoading ? "Loading..." : "Register"}
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
+            Already have an account?{" "}
             <Link to="/login" className="underline">
               Login
             </Link>

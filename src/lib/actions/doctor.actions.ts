@@ -9,6 +9,7 @@ export const registerDoctor = async (data: {
     return response;
   } catch (error: any) {
     console.log(error);
+    throw error;
   }
 };
 
@@ -21,6 +22,7 @@ export const loginDoctor = async (data: {
     return response;
   } catch (error: any) {
     console.log(error);
+    throw error;
   }
 };
 
@@ -40,6 +42,15 @@ export const linkPatient = async (data: {
 }) => {
   try {
     const response = await axios_instance.post(`/doctor/link-patient`, data);
+    return response;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
+export const getPdfsbyDoctor = async () => {
+  try {
+    const response = await axios_instance.get(`/doctor/get-all-pdfs`);
     return response;
   } catch (error: any) {
     console.log(error);

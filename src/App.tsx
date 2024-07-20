@@ -1,5 +1,3 @@
-// import { CalendarDateRangePicker } from "@/components/date-range-picker";
-
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
@@ -7,6 +5,7 @@ import AuthLayout from "./_auth/AuthLayout";
 import Login from "./_auth/pages/Login";
 import Signup from "./_auth/pages/Signup";
 import DashboardLayout from "./_root/Layout";
+import AddPdf from "./_root/pages/AddPdf";
 import Dashboard from "./_root/pages/Dashboard";
 import Patients from "./_root/pages/Patients";
 import Pdfs from "./_root/pages/Pdfs";
@@ -14,7 +13,7 @@ import { useCurrentDoctor } from "./lib/react-query/quries-mutations";
 import { login, logout } from "./store/authSlice";
 
 export default function App() {
-  const { data: currentUser, isLoading, isError } = useCurrentDoctor();
+  const { data: currentUser, isError } = useCurrentDoctor();
   const dispatch = useDispatch();
   useEffect(() => {
     if (currentUser) {
@@ -39,6 +38,7 @@ export default function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/patients" element={<Patients />} />
           <Route path="/pdfs" element={<Pdfs />} />
+          <Route path="/add-pdf" element={<AddPdf />} />
         </Route>
       </Routes>
     </>

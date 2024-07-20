@@ -10,12 +10,11 @@ export const getPatientsByDoctorId = async (doctorId: string) => {
   }
 };
 
-export const getAllPatients=async()=>{
+export const getAllPatients = async () => {
   try {
-    const response=await axios_instance.get("/doctor/get-all-patients")
-    return response
-    
+    const response = await axios_instance.get("/doctor/get-all-patients");
+    return response;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};

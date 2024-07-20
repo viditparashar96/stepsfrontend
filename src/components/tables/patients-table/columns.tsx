@@ -1,15 +1,11 @@
-"use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { User } from "../../../constants/data";
-import { Checkbox } from "../../ui/checkbox";
 import CellAction from "./cell-action";
-import Linkbtn from "../../Linkbtn";
 
 export const columns: ColumnDef<User>[] = [
-  
   {
-    accessorKey:"id",
-    header:"ID"
+    accessorKey: "id",
+    header: "ID",
   },
   {
     accessorKey: "name",
@@ -19,10 +15,10 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "email",
     header: "Email",
   },
-  
-  
+
   {
+    accessorKey: "actions",
     id: "actions",
-    cell: ({ row }) => <Linkbtn data={row.original} />,
+    cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];

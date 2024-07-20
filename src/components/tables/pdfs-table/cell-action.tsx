@@ -1,7 +1,8 @@
 "use client";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useState } from "react";
-import { User } from "../../../constants/data";
+import { MoreHorizontal, Trash, View } from "lucide-react";
+import { toast } from "sonner";
+import { env_config } from "../../../config/env_config";
+import { useDeletePdf } from "../../../lib/react-query/quries-mutations";
 import { Button } from "../../ui/button";
 import {
   DropdownMenu,
@@ -12,14 +13,30 @@ import {
 } from "../../ui/dropdown-menu";
 
 interface CellActionProps {
-  data: User;
+  data: any;
 }
 
 const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  console.log("data===>", data);
 
-  const onConfirm = async () => {};
+  const { mutateAsync: deletePdf } = useDeletePdf();
+
+  const handleDelete = async () => {
+    try {
+      await deletePdf(data.id);
+      toast.success("Pdf deleted successfully");
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const handleViewClick = () => {
+    if (data.filePath) {
+      window.open(`${env_config.cloudfront_url}/${data.filePath}`, "_blank");
+    } else {
+      console.error("No URL found in data");
+    }
+  };
 
   return (
     <>
@@ -32,11 +49,13 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-          <DropdownMenuItem onClick={() => {}}>
-            <Edit className="mr-2 h-4 w-4" /> Update
+          <DropdownMenuItem
+            onClick={handleViewClick}
+            className="cursor-pointer"
+          >
+            <View className="mr-2 h-4 w-4" /> View
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem onClick={handleDelete} className="cursor-pointer">
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

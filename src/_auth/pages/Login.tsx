@@ -1,24 +1,17 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { useLoginDoctor } from "../../lib/react-query/quries-mutations";
 
 export default function Login() {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const dispatch = useDispatch();
-  const {
-    mutateAsync: loginDoctor,
-    isPending: isLoading,
-    isError,
-    error,
-  } = useLoginDoctor();
+  const { mutateAsync: loginDoctor, isPending: isLoading } = useLoginDoctor();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,15 +29,25 @@ export default function Login() {
         console.log("Navigate to dashboard");
         window.location.href = "/";
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      if (error?.response?.data?.errors) {
+        error?.response?.data?.errors.forEach((err: any) => {
+          toast.error(err.message);
+        });
+      } else {
+        toast.error(error?.response.data.message);
+      }
     }
   };
-  if (isError) return <div>Error: {JSON.stringify(error)}</div>;
 
   return (
     <div className="w-full lg:grid  lg:grid-cols-2 min-h-screen">
-      <div className="flex items-center justify-center py-12">
+      <h1 className="text-sm  text-center py-4 opacity-55 absolute left-4">
+        The backend of this application is deployed on render for free so it
+        will take initially 60sec to start
+      </h1>
+      <div className="flex items-center justify-center py-20">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Login</h1>
@@ -66,15 +69,6 @@ export default function Login() {
               />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  to="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
               <Input
                 id="password"
                 type="password"

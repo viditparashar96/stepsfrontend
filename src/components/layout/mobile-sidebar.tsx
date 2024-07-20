@@ -5,7 +5,7 @@ import { navItems } from "../../constants/data";
 import { DashboardNav } from "../dashboard-nav";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 
-export function MobileSidebar({ className }: any) {
+export function MobileSidebar() {
   const [open, setOpen] = useState(false);
   return (
     <>

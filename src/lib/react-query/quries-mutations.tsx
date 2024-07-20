@@ -5,11 +5,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   currentDoctor,
+  getPdfsbyDoctor,
   linkPatient,
   loginDoctor,
   registerDoctor,
 } from "../actions/doctor.actions";
-import { getAllPatients, getPatientsByDoctorId } from "../actions/patients.action";
+import {
+  getAllPatients,
+  getPatientsByDoctorId,
+} from "../actions/patients.action";
+import { deletePdfById, uploadPdf } from "../actions/pdf.action";
 import { QUERY_KEYS } from "./quiryKeys";
 
 export const useCurrentDoctor = () => {
@@ -27,12 +32,19 @@ export const useDoctorPatients = (doctorId: string) => {
   });
 };
 
-export const useGetAllPatients=()=>{
+export const useGetAllPatients = () => {
   return useQuery({
-    queryKey:[QUERY_KEYS.GET_All_PATIENTS],
-    queryFn:()=>getAllPatients()
-  })
-}
+    queryKey: [QUERY_KEYS.GET_All_PATIENTS],
+    queryFn: () => getAllPatients(),
+  });
+};
+
+export const useGetPdfsByDoctor = (doctorId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_PDFS_BY_DOCTOR, doctorId],
+    queryFn: () => getPdfsbyDoctor(),
+  });
+};
 
 // ============================================================
 // POST QUERIES
@@ -61,6 +73,25 @@ export const useLinkPatient = (doctorId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_DOCTOR_PATIENTS, doctorId],
+      });
+    },
+  });
+};
+
+export const useUploadPdf = () => {
+  return useMutation({
+    mutationFn: (data: any) => uploadPdf(data),
+  });
+};
+
+export const useDeletePdf = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => deletePdfById(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_PDFS_BY_DOCTOR],
       });
     },
   });

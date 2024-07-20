@@ -1,47 +1,46 @@
 "use client";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useState } from "react";
-import { User } from "../../../constants/data";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useLinkPatient } from "../../../lib/react-query/quries-mutations";
 import { Button } from "../../ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
 
-interface CellActionProps {
-  data: User;
-}
+const CellAction: React.FC<any> = ({ data }) => {
+  const navigate = useNavigate();
+  console.log("data in cell-actions===>", data);
+  const user = useSelector((state: any) => state.auth.userData);
+  const isAlreadyLinked = data.doctors.some(
+    (doc: any) => doc.doctorId === user.id
+  );
+  console.log("isAlreadyLinked===>", isAlreadyLinked);
+  const {
+    mutateAsync: linkPatient,
+    isPending,
+    isError,
+  } = useLinkPatient(user.id);
 
-const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const handleLink = async () => {
+    try {
+      await linkPatient({ doctorId: user.id, patientId: data.id });
+      navigate("/");
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
 
-  const onConfirm = async () => {};
-
+  if (isPending)
+    return <Button className="bg-red-500 text-white">Loading...</Button>;
+  if (isError) return <Button className="bg-red-500 text-white">Error</Button>;
+  console.log("Pateint data===>", data);
   return (
-    <>
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-          <DropdownMenuItem onClick={() => {}}>
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </>
+    <Button
+      className={`
+      ${isAlreadyLinked ? "bg-red-500" : "bg-green-500"} 
+      text-white
+    `}
+      onClick={handleLink}
+    >
+      {isAlreadyLinked ? "Unlink" : "Link"}
+    </Button>
   );
 };
 
