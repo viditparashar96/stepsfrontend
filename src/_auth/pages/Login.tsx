@@ -25,9 +25,12 @@ export default function Login() {
     console.log(formData);
     try {
       const response = await loginDoctor(formData);
-      if (response?.status === 200) {
+      console.log(response);
+      if (response?.data) {
         console.log("Navigate to dashboard");
-        window.location.href = "/";
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
       }
     } catch (error: any) {
       console.log(error);
@@ -69,11 +72,14 @@ export default function Login() {
               />
             </div>
             <div className="grid gap-2">
+              <Label htmlFor="email">Password</Label>
+
               <Input
                 id="password"
                 type="password"
                 required
                 name="password"
+                placeholder="Enter password"
                 value={formData.password}
                 onChange={handleChange}
               />
