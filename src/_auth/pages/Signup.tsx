@@ -94,10 +94,12 @@ export default function Signup() {
               />
             </div>
             <div className="grid gap-2">
+              <Label htmlFor="email">Password</Label>
               <Input
                 id="password"
                 type="password"
                 required
+                placeholder="Enter password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
