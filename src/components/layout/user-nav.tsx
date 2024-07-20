@@ -18,9 +18,12 @@ export function UserNav() {
   const user = useSelector((state: any) => state.auth.userData);
   const handleLogout = async () => {
     try {
-      await axios_instance.post(`/doctor/logout`);
-      dispatch(logout());
-      window.location.href = "/login";
+      const response = await axios_instance.post(`/doctor/logout`);
+      console.log(response);
+      if (response.data) {
+        dispatch(logout());
+        window.location.href = "/login";
+      }
     } catch (error: any) {
       console.log(error);
     }
